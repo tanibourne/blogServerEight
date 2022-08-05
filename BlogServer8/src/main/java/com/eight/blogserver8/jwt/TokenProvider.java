@@ -1,6 +1,6 @@
 package com.eight.blogserver8.jwt;
 
-import com.eight.blogserver8.controller.request.TokenDto;
+import com.eight.blogserver8.request.TokenDto;
 import com.eight.blogserver8.controller.response.ResponseDto;
 import com.eight.blogserver8.domain.Member;
 import com.eight.blogserver8.domain.RefreshToken;

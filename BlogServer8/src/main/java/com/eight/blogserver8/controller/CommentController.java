@@ -1,6 +1,6 @@
 package com.eight.blogserver8.controller;
 
-import com.eight.blogserver8.controller.request.CommentRequestDto;
+import com.eight.blogserver8.request.CommentRequestDto;
 import com.eight.blogserver8.controller.response.ResponseDto;
 import com.eight.blogserver8.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class CommentController {
 
     @RequestMapping(value = "/api/comment/{id}", method = RequestMethod.GET)
     public ResponseDto<?> getAllComments(@PathVariable Long id) {
-        return commentService.getAllCommentsByPost(id);
+        return commentService.getAllSubCommentsByComment(id);
     }
 
     @RequestMapping(value = "/api/auth/comment/{id}", method = RequestMethod.PUT)

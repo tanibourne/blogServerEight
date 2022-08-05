@@ -1,7 +1,7 @@
 package com.eight.blogserver8.service;
 
 
-import com.eight.blogserver8.controller.request.PostRequestDto;
+import com.eight.blogserver8.request.PostRequestDto;
 import com.eight.blogserver8.controller.response.CommentResponseDto;
 import com.eight.blogserver8.controller.response.PostResponseDto;
 import com.eight.blogserver8.controller.response.ResponseDto;

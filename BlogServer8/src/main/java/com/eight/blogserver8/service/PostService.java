@@ -80,9 +80,9 @@ public class PostService {
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
         for (Comment comment : commentList) {
-          List<SubComment> subCommentList = subCommentRepository.findAllByComment(comment);
+          List<SubComment> cheackSubCommnet = comment.getSubComments();
           List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
-          for (SubComment subComment : subCommentList) {
+          for (SubComment subComment : cheackSubCommnet) {
               subCommentResponseDtoList.add(
                       SubCommentResponseDto.builder()
                               .id(subComment.getId())

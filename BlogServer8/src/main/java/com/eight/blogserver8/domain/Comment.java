@@ -33,7 +33,7 @@ public class Comment extends Timestamped {
   private String content;
 
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "comment")
   private List<SubComment> subComments;
 
   public void update(CommentRequestDto commentRequestDto) {

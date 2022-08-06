@@ -1,4 +1,4 @@
-package com.eight.blogserver8.controller.request;
+package com.eight.blogserver8.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentRequestDto {
-  private Long postId;
-  private String content;
+public class SubCommentRequestDto {
+    private Long commentId;
+    private String content;
 }

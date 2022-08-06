@@ -1,6 +1,10 @@
 package com.eight.blogserver8.service;
 
-import com.eight.blogserver8.controller.request.CommentRequestDto;
+import com.eight.blogserver8.controller.response.PostResponseDto;
+import com.eight.blogserver8.controller.response.SubCommentResponseDto;
+import com.eight.blogserver8.domain.SubComment;
+import com.eight.blogserver8.repository.SubCommentRepository;
+import com.eight.blogserver8.request.CommentRequestDto;
 import com.eight.blogserver8.controller.response.CommentResponseDto;
 import com.eight.blogserver8.controller.response.ResponseDto;
 import com.eight.blogserver8.domain.Comment;
@@ -22,6 +26,7 @@ import java.util.Optional;
 public class CommentService {
 
   private final CommentRepository commentRepository;
+  private final SubCommentRepository subCommentRepository;
 
   private final TokenProvider tokenProvider;
   private final PostService postService;
@@ -64,29 +69,35 @@ public class CommentService {
             .build()
     );
   }
-
   @Transactional(readOnly = true)
-  public ResponseDto<?> getAllCommentsByPost(Long postId) {
-    Post post = postService.isPresentPost(postId);
-    if (null == post) {
-      return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
-    }
+  public ResponseDto<?> getAllSubCommentsByComment(Long id) {
+    Comment comment = isPresentComment(id);
 
-    List<Comment> commentList = commentRepository.findAllByPost(post);
-    List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+    List<SubComment> subCommentList = subCommentRepository.findAllByComment(comment);
+    List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
 
-    for (Comment comment : commentList) {
-      commentResponseDtoList.add(
-          CommentResponseDto.builder()
-              .id(comment.getId())
-              .author(comment.getMember().getNickname())
-              .content(comment.getContent())
-              .createdAt(comment.getCreatedAt())
-              .modifiedAt(comment.getModifiedAt())
-              .build()
+    for (SubComment subComment : subCommentList) {
+      subCommentResponseDtoList.add(
+              SubCommentResponseDto.builder()
+                      .id(subComment.getId())
+                      .nickname(subComment.getMember().getNickname())
+                      .content(subComment.getContent())
+                      .createdAt(subComment.getCreatedAt())
+                      .modifiedAt(subComment.getModifiedAt())
+                      .build()
       );
     }
-    return ResponseDto.success(commentResponseDtoList);
+
+    return ResponseDto.success(
+            CommentResponseDto.builder()
+                    .id(comment.getId())
+                    .content(comment.getContent())
+                    .subCommentResponseDtoList(subCommentResponseDtoList)
+                    .author(comment.getMember().getNickname())
+                    .createdAt(comment.getCreatedAt())
+                    .modifiedAt(comment.getModifiedAt())
+                    .build()
+    );
   }
 
   @Transactional
@@ -175,4 +186,5 @@ public class CommentService {
     }
     return tokenProvider.getMemberFromAuthentication();
   }
+
 }

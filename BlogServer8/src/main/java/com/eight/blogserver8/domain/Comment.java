@@ -1,13 +1,14 @@
 package com.eight.blogserver8.domain;
 
 
-import com.eight.blogserver8.controller.request.CommentRequestDto;
+import com.eight.blogserver8.request.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @Getter
@@ -30,6 +31,10 @@ public class Comment extends Timestamped {
 
   @Column(nullable = false)
   private String content;
+
+
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "comment")
+  private List<SubComment> subComments;
 
   public void update(CommentRequestDto commentRequestDto) {
     this.content = commentRequestDto.getContent();

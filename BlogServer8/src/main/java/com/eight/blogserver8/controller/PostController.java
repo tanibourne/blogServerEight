@@ -1,6 +1,6 @@
 package com.eight.blogserver8.controller;
 
-import com.eight.blogserver8.controller.request.PostRequestDto;
+import com.eight.blogserver8.request.PostRequestDto;
 import com.eight.blogserver8.controller.response.ResponseDto;
 import com.eight.blogserver8.service.PostService;
 import lombok.RequiredArgsConstructor;

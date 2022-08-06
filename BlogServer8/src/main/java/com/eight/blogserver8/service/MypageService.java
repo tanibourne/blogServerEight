@@ -1,17 +1,10 @@
 package com.eight.blogserver8.service;
 
 import com.eight.blogserver8.controller.request.MypageRequestDto;
-import com.eight.blogserver8.controller.response.MypageResponseDto;
-import com.eight.blogserver8.controller.response.ResponseDto;
-import com.eight.blogserver8.domain.Comment;
-import com.eight.blogserver8.domain.Member;
-import com.eight.blogserver8.domain.Mypage;
-import com.eight.blogserver8.domain.Post;
+import com.eight.blogserver8.controller.response.*;
+import com.eight.blogserver8.domain.*;
 import com.eight.blogserver8.jwt.TokenProvider;
-import com.eight.blogserver8.repository.CommentRepository;
-import com.eight.blogserver8.repository.MemberRepository;
-import com.eight.blogserver8.repository.MypageRepository;
-import com.eight.blogserver8.repository.PostRepository;
+import com.eight.blogserver8.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +23,8 @@ public class MypageService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-//    private final LikeRepository likeRepository;
-//    private final SubCommentRepository subCommentRepository;
+    private final SubCommentRepository subCommentRepository;
+    //    private final LikeRepository likeRepository;
     private final TokenProvider tokenProvider;
 
 
@@ -55,20 +48,49 @@ public class MypageService {
 //        String name = maybePerson.get().getName();
         Member findMember = memberRepository.findByNickname(mypageRequestDto.getNickname()).get();
 
-        List<Post> post = postRepository.findByMember(findMember);
-        List<Comment> comment = commentRepository.findByMember(findMember);
+        List<Post> postList = postRepository.findByMember(findMember);
+        List<Comment> commentList = commentRepository.findByMember(findMember);
+        List<SubComment> subCommentList = subCommentRepository.findByMember(findMember);
+
+        MypageResponseDto mypageResponseDto = new MypageResponseDto();
+        List<MypagePostResponseDto> postListDto = new ArrayList<>();
+        List<MypageCommentResponseDto> commentListDto = new ArrayList<>();
+        List<MypageSubCommentResponseDto> subcommentListDto = new ArrayList<>();
+
+        for( Post post : postList){
+            postListDto.add(
+                    MypagePostResponseDto.builder()
+                            .postId(post.getId())
+                            .title(post.getTitle())
+                            .postContent(post.getContent())
+                            .build()
+            );
+        }
 
 
-//         mypageRepository.save(mypageList);
+        for (Comment comment : commentList){
+            commentListDto.add(
+                    MypageCommentResponseDto.builder()
+                            .commentId(comment.getId())
+                            .commentContent(comment.getContent())
+                            .build()
+            );
+        }
 
-         return ResponseDto.success(
-                 MypageResponseDto.builder()
-                         .postList(post)
-                         .commentList(comment)
-                         //넣을에정 좋아요, 대댓글, 이미지..
-                         .build()
+        for(SubComment subComment : subCommentList){
+            subcommentListDto.add(
+                    MypageSubCommentResponseDto.builder()
+                            .subCommentId(subComment.getId())
+                            .subCommentContent(subComment.getContent())
+                            .build()
+            );
+        }
 
-         );
+        mypageResponseDto.update(postListDto,commentListDto,subcommentListDto );
+
+
+
+         return ResponseDto.success( mypageResponseDto );
 
     }
 

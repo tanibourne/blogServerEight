@@ -47,13 +47,6 @@ public class SecurityConfiguration {
     }
 
 
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-// h2-console 사용에 대한 허용 (CSRF, FrameOptions 무시)
-        return (web) -> web.ignoring()
-                .antMatchers("/h2-console/**");
-    }
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

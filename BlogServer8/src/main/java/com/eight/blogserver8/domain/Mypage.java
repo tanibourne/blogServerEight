@@ -1,6 +1,5 @@
 package com.eight.blogserver8.domain;
 
-import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
 
@@ -24,10 +23,10 @@ public class Mypage {
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
-//    @JoinColumn(name = "subcomment_id", nullable = false)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Subcomment subcomment;
-//
+    @JoinColumn(name = "subcomment_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private SubComment subComment;
+
 //    @JoinColumn(name = "heart_id", nullable = false)
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private Heart heart;

@@ -28,10 +28,14 @@ public class Mypage {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private Subcomment subcomment;
 //
-//    @JoinColumn(name = "like_id", nullable = false)
+//    @JoinColumn(name = "heart_id", nullable = false)
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    private Like like;
-//
+//    private Heart heart;
+
+
+
+
+
 
 
 

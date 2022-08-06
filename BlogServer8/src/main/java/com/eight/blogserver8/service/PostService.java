@@ -73,6 +73,7 @@ public class PostService {
 
     List<Comment> commentList = commentRepository.findAllByPost(post);
     List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+//    Heart heart = heartRepository.findById(id)
 
     for (Comment comment : commentList) {
       commentResponseDtoList.add(
@@ -95,6 +96,8 @@ public class PostService {
             .author(post.getMember().getNickname())
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())
+//                .heart(heart.getNumber());
+//                .imgUrl(url.get()):  // 게시물이랑 imgUrl 매핑되게 만들어서..  postid를 받아와서 수정 및 삭제까지 가능하게..
             .build()
     );
   }
@@ -160,7 +163,9 @@ public class PostService {
       return ResponseDto.fail("BAD_REQUEST", "작성자만 삭제할 수 있습니다.");
     }
 
+
     postRepository.delete(post);
+
     return ResponseDto.success("delete success");
   }
 

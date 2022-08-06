@@ -65,7 +65,7 @@ public class MypageService {
                  MypageResponseDto.builder()
                          .postList(post)
                          .commentList(comment)
-                         //넣을에정
+                         //넣을에정 좋아요, 대댓글, 이미지..
                          .build()
 
          );

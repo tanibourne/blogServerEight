@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class Mypage {
 
     @Id
-    @Column(name="mypage_id")
+    @Column(name = "mypage_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -31,12 +31,6 @@ public class Mypage {
 //    @JoinColumn(name = "heart_id", nullable = false)
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private Heart heart;
-
-
-
-
-
-
-
+//
 
 }

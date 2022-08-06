@@ -1,7 +1,7 @@
 package com.eight.blogserver8.domain;
 
 
-import com.eight.blogserver8.controller.request.PostRequestDto;
+import com.eight.blogserver8.request.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

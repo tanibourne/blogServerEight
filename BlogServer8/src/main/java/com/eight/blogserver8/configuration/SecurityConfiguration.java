@@ -27,6 +27,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class SecurityConfiguration {
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+// h2-console 사용에 대한 허용 (CSRF, FrameOptions 무시)
+        return (web) -> web.ignoring()
+                .antMatchers("/h2-console/**");
+    }
+
     @Value("${jwt.secret}")
     String SECRET_KEY;
     private final TokenProvider tokenProvider;

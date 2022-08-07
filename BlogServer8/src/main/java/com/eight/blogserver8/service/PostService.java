@@ -1,6 +1,10 @@
 package com.eight.blogserver8.service;
 
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.eight.blogserver8.controller.response.SubCommentResponseDto;
 import com.eight.blogserver8.domain.SubComment;
 import com.eight.blogserver8.repository.SubCommentRepository;
@@ -14,11 +18,16 @@ import com.eight.blogserver8.domain.Post;
 import com.eight.blogserver8.jwt.TokenProvider;
 import com.eight.blogserver8.repository.CommentRepository;
 import com.eight.blogserver8.repository.PostRepository;
+import com.eight.blogserver8.shared.CommonUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +43,13 @@ public class PostService {
 
     private final TokenProvider tokenProvider;
 
+    private final AmazonS3Client amazonS3Client;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
+
     @Transactional
-    public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {
+    public ResponseDto<?> createPost(PostRequestDto requestDto, MultipartFile multipartFile, HttpServletRequest request) throws IOException {
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
@@ -51,9 +65,26 @@ public class PostService {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
 
+        String imageUrl = null;
+
+        if (!multipartFile.isEmpty()) {
+            String fileName = CommonUtils.buildFileName(multipartFile.getOriginalFilename());
+
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType(multipartFile.getContentType());
+
+            InputStream inputStream = multipartFile.getInputStream();
+            amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+
+
+            imageUrl = amazonS3Client.getUrl(bucketName, fileName).toString();
+        }
+
         Post post = Post.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
+                .imageUrl(imageUrl)
                 .member(member)
                 .build();
         postRepository.save(post);
@@ -65,8 +96,10 @@ public class PostService {
                         .author(post.getMember().getNickname())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
+                        .imageUrl(post.getImageUrl())
                         .build()
         );
+
     }
 
     @Transactional(readOnly = true)

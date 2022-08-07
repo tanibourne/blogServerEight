@@ -27,6 +27,9 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String content;
 
+  @Column
+  private String imageUrl;
+
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 

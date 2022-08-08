@@ -21,10 +21,8 @@ public class MypageController {
     private final MypageService mypageService;
 
     @RequestMapping(value ="/api/auth/mypage", method = RequestMethod.POST)
-    public ResponseDto<?> viewMypage(@RequestBody MypageRequestDto mypageRequestDto, HttpServletRequest request){
-
-        return mypageService.viewMypage(mypageRequestDto, request);
-
+    public ResponseDto<?> viewMypage(HttpServletRequest request){
+        return mypageService.viewMypage(request);
     }
 
 

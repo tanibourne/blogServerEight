@@ -30,8 +30,6 @@ public class Mypage {
 
 
     @JoinColumn(name = "comment_id", nullable = false)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Comment comment;
 //    @OneToMany(fetch = FetchType.LAZY)
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Comment> commentList;
@@ -39,8 +37,6 @@ public class Mypage {
 
     @JoinColumn(name = "subcomment_id", nullable = false)
     @ManyToMany(fetch = FetchType.LAZY)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private SubComment subComment;
 //    @OneToMany(fetch = FetchType.LAZY)
     private List<SubComment> subCommentList;
 
@@ -49,7 +45,7 @@ public class Mypage {
 //    @JoinColumn(name = "heart_id", nullable = false)
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private Heart heart;
-//
+
 
     public void update(Member member,
             List<Post> postListDto,

@@ -18,7 +18,7 @@ import java.util.List;
 public class MypageService {
 
 
-    private final MypageRepository mypageRepository;
+
     //
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
@@ -29,7 +29,7 @@ public class MypageService {
 
 
 
-    public ResponseDto<?> viewMypage(MypageRequestDto mypageRequestDto, HttpServletRequest request) {
+    public ResponseDto<?> viewMypage(HttpServletRequest request) {
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
@@ -46,11 +46,11 @@ public class MypageService {
         }
 
 //        String name = maybePerson.get().getName();
-        Member findMember = memberRepository.findByNickname(mypageRequestDto.getNickname()).get();
+//        Member findMember = memberRepository.findByNickname(mypageRequestDto.getNickname()).get(); // optional. get을해서 넣어줌..
 
-        List<Post> postList = postRepository.findByMember(findMember);
-        List<Comment> commentList = commentRepository.findByMember(findMember);
-        List<SubComment> subCommentList = subCommentRepository.findByMember(findMember);
+        List<Post> postList = postRepository.findByMember(member);
+        List<Comment> commentList = commentRepository.findByMember(member);
+        List<SubComment> subCommentList = subCommentRepository.findByMember(member);
 
         Mypage mypage = new Mypage();
         MypageResponseDto mypageResponseDto = new MypageResponseDto();
@@ -87,8 +87,8 @@ public class MypageService {
             );
         }
 
-        mypage.update(findMember,postList,commentList,subCommentList);// 마이페이지 객체에 업데이트
-        mypageRepository.save(mypage);
+//        mypage.update(findMember,postList,commentList,subCommentList);// 마이페이지 객체에 업데이트
+//        mypageRepository.save(mypage);   // 저장하는게 아니다.
         mypageResponseDto.update(postListDto,commentListDto,subcommentListDto ); // 빌더 안쓰고 리스폰 만듬.
 
          return ResponseDto.success( mypageResponseDto );

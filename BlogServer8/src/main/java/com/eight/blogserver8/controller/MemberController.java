@@ -5,6 +5,7 @@ import com.eight.blogserver8.request.MemberRequestDto;
 import com.eight.blogserver8.controller.response.ResponseDto;
 import com.eight.blogserver8.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 @RestController
 public class MemberController {
 
+    @Autowired
     private final MemberService memberService;
 
     @RequestMapping(value = "/api/member/signup", method = RequestMethod.POST)

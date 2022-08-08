@@ -3,6 +3,7 @@ package com.eight.blogserver8.service;
 
 import com.eight.blogserver8.controller.request.PostRequestDto;
 import com.eight.blogserver8.controller.response.CommentResponseDto;
+import com.eight.blogserver8.controller.response.PostListResponseDto;
 import com.eight.blogserver8.controller.response.PostResponseDto;
 import com.eight.blogserver8.controller.response.ResponseDto;
 import com.eight.blogserver8.domain.Comment;
@@ -10,6 +11,7 @@ import com.eight.blogserver8.domain.Member;
 import com.eight.blogserver8.domain.Post;
 import com.eight.blogserver8.jwt.TokenProvider;
 import com.eight.blogserver8.repository.CommentRepository;
+import com.eight.blogserver8.repository.HeartPostRepository;
 import com.eight.blogserver8.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class PostService {
   private final CommentRepository commentRepository;
 
   private final TokenProvider tokenProvider;
+
+  private final HeartPostRepository heartPostRepository;
 
   @Transactional
   public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {
@@ -58,6 +62,7 @@ public class PostService {
             .title(post.getTitle())
             .content(post.getContent())
             .author(post.getMember().getNickname())
+            .heart(post.getHeart()) // 좋아요 !
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())
             .build()
@@ -80,6 +85,7 @@ public class PostService {
               .id(comment.getId())
               .author(comment.getMember().getNickname())
               .content(comment.getContent())
+              .heart(comment.getHeart()) // 좋아요 !
               .createdAt(comment.getCreatedAt())
               .modifiedAt(comment.getModifiedAt())
               .build()
@@ -93,6 +99,7 @@ public class PostService {
             .content(post.getContent())
             .commentResponseDtoList(commentResponseDtoList)
             .author(post.getMember().getNickname())
+            .heart(post.getHeart()) // 좋아요 !
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())
             .build()
@@ -101,7 +108,25 @@ public class PostService {
 
   @Transactional(readOnly = true)
   public ResponseDto<?> getAllPost() {
-    return ResponseDto.success(postRepository.findAllByOrderByModifiedAtDesc());
+
+    //게시글 목록 response에 id, 제목, 작성자, 좋아요 개수, 대댓글 제외한 댓글 개수, 등록일, 수정일 나타내기
+    // 전체 포스트
+    List<Post> allByOrderByModifiedAtDesc = postRepository.findAllByOrderByModifiedAtDesc();
+    // 요구사항에 맞게 리턴할 리스트 선언
+    List<PostListResponseDto> dtoList = new ArrayList<>();
+
+    for (Post post : allByOrderByModifiedAtDesc) {
+      // 게시글 아이디
+      Long postId = post.getId();
+      // 게시글 좋아요 개수 세기
+      long heartCount = heartPostRepository.countAllByPostId(postId);
+      // 요구사항에 맞는 ResponseDto로 변환
+      PostListResponseDto postListResponseDto = new PostListResponseDto(post, heartCount);
+      // 결과 저장 리스트에 담기
+      dtoList.add(postListResponseDto);
+    }
+
+    return ResponseDto.success(dtoList);
   }
 
   @Transactional

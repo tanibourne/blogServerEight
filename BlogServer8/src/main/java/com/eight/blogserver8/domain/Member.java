@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Builder
@@ -28,6 +29,31 @@ public class Member extends Timestamped {
   @Column(nullable = false)
   @JsonIgnore
   private String password;
+
+  // cascade = CascadeType.ALL=> member가 삭제될 때 연관된 엔티티인 Heart도 같이 삭제
+  @OneToMany(
+          mappedBy = "member",
+          cascade = CascadeType.ALL,
+          orphanRemoval = true,
+          fetch = FetchType.LAZY)
+  private List<HeartPost> heartPosts;
+
+  @OneToMany(
+          mappedBy = "member",
+          cascade = CascadeType.ALL,
+          orphanRemoval = true,
+          fetch = FetchType.LAZY)
+  private List<HeartComment> heartComments;
+
+  @OneToMany(
+          mappedBy = "member",
+          cascade = CascadeType.ALL,
+          orphanRemoval = true,
+          fetch = FetchType.LAZY)
+  private List<HeartSubComment> heartSubComments;
+
+
+
 
   @Override
   public boolean equals(Object o) {

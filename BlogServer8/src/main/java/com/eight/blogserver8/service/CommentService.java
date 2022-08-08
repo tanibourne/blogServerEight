@@ -8,6 +8,7 @@ import com.eight.blogserver8.domain.Member;
 import com.eight.blogserver8.domain.Post;
 import com.eight.blogserver8.jwt.TokenProvider;
 import com.eight.blogserver8.repository.CommentRepository;
+import com.eight.blogserver8.repository.HeartCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,8 @@ public class CommentService {
 
   private final TokenProvider tokenProvider;
   private final PostService postService;
+
+  private final HeartCommentRepository heartCommentRepository;
 
   @Transactional
   public ResponseDto<?> createComment(CommentRequestDto requestDto, HttpServletRequest request) {
@@ -59,6 +62,7 @@ public class CommentService {
             .id(comment.getId())
             .author(comment.getMember().getNickname())
             .content(comment.getContent())
+            .heart(comment.getHeart())  // 좋아요!
             .createdAt(comment.getCreatedAt())
             .modifiedAt(comment.getModifiedAt())
             .build()
@@ -81,6 +85,7 @@ public class CommentService {
               .id(comment.getId())
               .author(comment.getMember().getNickname())
               .content(comment.getContent())
+              .heart(comment.getHeart())  // 좋아요!
               .createdAt(comment.getCreatedAt())
               .modifiedAt(comment.getModifiedAt())
               .build()
@@ -126,6 +131,7 @@ public class CommentService {
             .id(comment.getId())
             .author(comment.getMember().getNickname())
             .content(comment.getContent())
+            .heart(comment.getHeart())  // 좋아요!
             .createdAt(comment.getCreatedAt())
             .modifiedAt(comment.getModifiedAt())
             .build()

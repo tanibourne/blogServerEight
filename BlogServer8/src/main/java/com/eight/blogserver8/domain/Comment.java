@@ -31,6 +31,13 @@ public class Comment extends Timestamped {
   @Column(nullable = false)
   private String content;
 
+  @Column(nullable = true)
+  private Long heart;
+
+  public void updateHeart(Long heart) {
+    this.heart = heart;
+  }
+
   public void update(CommentRequestDto commentRequestDto) {
     this.content = commentRequestDto.getContent();
   }
@@ -38,4 +45,5 @@ public class Comment extends Timestamped {
   public boolean validateMember(Member member) {
     return !this.member.equals(member);
   }
+
 }

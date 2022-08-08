@@ -52,6 +52,7 @@ public class MypageService {
         List<Comment> commentList = commentRepository.findByMember(findMember);
         List<SubComment> subCommentList = subCommentRepository.findByMember(findMember);
 
+        Mypage mypage = new Mypage();
         MypageResponseDto mypageResponseDto = new MypageResponseDto();
         List<MypagePostResponseDto> postListDto = new ArrayList<>();
         List<MypageCommentResponseDto> commentListDto = new ArrayList<>();
@@ -86,9 +87,9 @@ public class MypageService {
             );
         }
 
-        mypageResponseDto.update(postListDto,commentListDto,subcommentListDto );
-
-
+        mypage.update(findMember,postList,commentList,subCommentList);// 마이페이지 객체에 업데이트
+        mypageRepository.save(mypage);
+        mypageResponseDto.update(postListDto,commentListDto,subcommentListDto ); // 빌더 안쓰고 리스폰 만듬.
 
          return ResponseDto.success( mypageResponseDto );
 

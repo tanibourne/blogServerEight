@@ -1,7 +1,12 @@
 package com.eight.blogserver8.domain;
 
 
+import com.eight.blogserver8.controller.response.MypageCommentResponseDto;
+import com.eight.blogserver8.controller.response.MypagePostResponseDto;
+import com.eight.blogserver8.controller.response.MypageSubCommentResponseDto;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Mypage {
@@ -11,25 +16,52 @@ public class Mypage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @JoinColumn(name = "member_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)   /// Mypage에서 뒤에를 불러온다~~
+    @OneToOne(fetch = FetchType.LAZY)  // Many to One에서 변경시 이상 없음..
     private Member member;
 
+
     @JoinColumn(name = "post_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
+    @ManyToMany(fetch = FetchType.LAZY) // 물어볼꺼임 ... ONE은  왜 안됨??
+//    @OneToMany(fetch = FetchType.LAZY)
+    private List<Post> postList;
+
 
     @JoinColumn(name = "comment_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Comment comment;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Comment comment;
+//    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Comment> commentList;
+
 
     @JoinColumn(name = "subcomment_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private SubComment subComment;
+    @ManyToMany(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private SubComment subComment;
+//    @OneToMany(fetch = FetchType.LAZY)
+    private List<SubComment> subCommentList;
+
+
 
 //    @JoinColumn(name = "heart_id", nullable = false)
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private Heart heart;
 //
+
+    public void update(Member member,
+            List<Post> postListDto,
+            List<Comment> commentListDto,
+            List<SubComment> subcommentListDto){
+        this.member = member;
+        this.postList = postListDto;
+        this.commentList = commentListDto;
+        this.subCommentList = subcommentListDto;
+
+    }
+
+
 
 }

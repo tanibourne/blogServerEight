@@ -25,7 +25,7 @@ public class Mypage {
 
     @JoinColumn(name = "post_id", nullable = false)
     @ManyToMany(fetch = FetchType.LAZY) // 물어볼꺼임 ... ONE은  왜 안됨??
-//    @OneToMany(fetch = FetchType.LAZY)
+//    @OneToMany(fetch = FetchType.LAZY)  // mapped by post를 지정해주지 않아서 .
     private List<Post> postList;
 
 

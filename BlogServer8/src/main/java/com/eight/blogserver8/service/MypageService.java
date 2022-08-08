@@ -28,7 +28,7 @@ public class MypageService {
     private final TokenProvider tokenProvider;
 
 
-
+    @Transactional
     public ResponseDto<?> viewMypage(HttpServletRequest request) {
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
@@ -52,7 +52,7 @@ public class MypageService {
         List<Comment> commentList = commentRepository.findByMember(member);
         List<SubComment> subCommentList = subCommentRepository.findByMember(member);
 
-        Mypage mypage = new Mypage();
+
         MypageResponseDto mypageResponseDto = new MypageResponseDto();
         List<MypagePostResponseDto> postListDto = new ArrayList<>();
         List<MypageCommentResponseDto> commentListDto = new ArrayList<>();
@@ -64,6 +64,8 @@ public class MypageService {
                             .postId(post.getId())
                             .title(post.getTitle())
                             .postContent(post.getContent())
+                            .createdAt(post.getCreatedAt())
+                            .modifiedAt(post.getModifiedAt())
                             .build()
             );
         }
@@ -74,6 +76,8 @@ public class MypageService {
                     MypageCommentResponseDto.builder()
                             .commentId(comment.getId())
                             .commentContent(comment.getContent())
+                            .createdAt(comment.getCreatedAt())
+                            .modifiedAt(comment.getModifiedAt())
                             .build()
             );
         }
@@ -83,6 +87,8 @@ public class MypageService {
                     MypageSubCommentResponseDto.builder()
                             .subCommentId(subComment.getId())
                             .subCommentContent(subComment.getContent())
+                            .createdAt(subComment.getCreatedAt())
+                            .modifiedAt(subComment.getModifiedAt())
                             .build()
             );
         }
@@ -94,13 +100,6 @@ public class MypageService {
          return ResponseDto.success( mypageResponseDto );
 
     }
-
-
-
-
-
-
-
 
     @Transactional
     public Member validateMember(HttpServletRequest request) {
